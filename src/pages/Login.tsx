@@ -3,9 +3,12 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 const Login = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const form = useForm({
     defaultValues: {
       email: "",
@@ -14,7 +17,19 @@ const Login = () => {
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
+    if (data.email === "admin" && data.password === "admin") {
+      toast({
+        title: "Success",
+        description: "Welcome back, admin!",
+      });
+      navigate("/dashboard");
+    } else {
+      toast({
+        title: "Error",
+        description: "Invalid credentials. Try admin/admin",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -31,9 +46,9 @@ const Login = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="john@example.com" {...field} />
+                      <Input placeholder="admin" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -46,7 +61,7 @@ const Login = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
+                      <Input type="password" placeholder="admin" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
